@@ -1,52 +1,66 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:evently/pages/main_layout_screen.dart';
-import 'package:evently/tabs/profile_page.dart';
-import 'package:evently/providers/theme_provider.dart';
-import 'package:evently/utilities/app_routes.dart';
-import 'package:evently/utilities/app_themes.dart';
+import 'package:evently/core/providers/theme_provider.dart';
+import 'package:evently/core/utilities/routes/app_route.dart';
+import 'package:evently/core/utilities/routes/app_route_names.dart';
+import 'package:evently/core/utilities/app_themes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart'; 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await EasyLocalization.ensureInitialized();
+  await EasyLocalization.ensureInitialized(); 
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider<ThemeProvider>( create: (context) => ThemeProvider() ) ,
+        ChangeNotifierProvider<ThemeProvider>( create: (context) => ThemeProvider() , )
       ],
       child: EasyLocalization(
-        supportedLocales: const [
-          Locale("en") ,
-          Locale("ar") ,
-        ] , 
-        fallbackLocale: const Locale("en"),
-        path: 'assets/translations' ,
-        child: const Evently()
+        supportedLocales: const [ 
+          Locale('en') ,
+          Locale('ar'),
+        ],
+        path: 'assets/translations',
+        fallbackLocale: const Locale('ar'),
+        child: const EventlyApp()
       ) ,
     )
   );
 }
 
-class Evently extends StatelessWidget {
-  const Evently({super.key});
+class EventlyApp extends StatelessWidget {
+  const EventlyApp({super.key});
   @override
-  Widget build(context) {
-    ThemeProvider themeProvider = Provider.of( context , listen: true ) ;
-    return MaterialApp(
-      debugShowCheckedModeBanner: false ,
-      title: 'Evently',
-      routes: {
-        AppRoutes.profilePage :(context) => ProfilePage() ,
-        AppRoutes.mainLayout :(context) => MainLayoutScreen() ,
-      } ,
-      initialRoute: AppRoutes.mainLayout ,
-      theme: AppThemes.themeLight ,
-      darkTheme : AppThemes.themeDark ,
-      themeMode:  themeProvider.themeMode ,
-      localizationsDelegates : context.localizationDelegates ,
-      supportedLocales : context.supportedLocales ,
-      locale: context.locale ,
+  Widget build(BuildContext context) {
+    ThemeProvider themeProvider = Provider.of(context) ;
+    return ScreenUtilInit(
+      designSize: const Size( 375 , 812 ),
+      minTextAdapt: true ,
+      builder:(context,child){
+        return MaterialApp(
+          title: 'Evently',
+          debugShowCheckedModeBanner: false ,
+          localizationsDelegates : context.localizationDelegates ,
+          supportedLocales : context.supportedLocales ,
+          locale: context.locale ,
+          onGenerateRoute : AppRoute.onGenerateRoute ,
+          initialRoute: AppRouteNames.splashScreen ,
+          themeMode: themeProvider.themeMode ,
+          theme: AppThemes.lightTheme , 
+          darkTheme: AppThemes.darkTheme ,
+          builder: (context, widget) {
+            return Directionality(
+              textDirection: .ltr ,
+              child: widget!,
+            );
+          },
+        );
+      }
     );
   }
 }
