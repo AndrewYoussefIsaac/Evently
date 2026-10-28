@@ -28,7 +28,12 @@ class MainLayoutScreen extends StatelessWidget {
             "+" ,
             style: TextStyle( fontSize: 40 , fontWeight: .w300  ),
           ) ,
-          onPressed: () => Navigator.pushNamed(context, AppRouteNames.addEventScreen )
+          onPressed: () async {
+            var isAdded = await Navigator.pushNamed(context, AppRouteNames.manageEventScreen ) ;
+            if ( isAdded == true ) {
+              provider.getEvents() ;
+            }
+          } 
         ),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: provider.currentScreen ,

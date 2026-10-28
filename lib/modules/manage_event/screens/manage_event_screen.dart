@@ -1,8 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:evently/modules/add_event/manager/add_event_provider.dart';
-import 'package:evently/modules/add_event/widgets/custom_choose_event_date_time.dart';
-import 'package:evently/modules/add_event/widgets/custom_text_form_field.dart';
-import 'package:evently/modules/auth/widgets/custom_back_button.dart';
+import 'package:evently/core/models/event_model.dart';
+import 'package:evently/modules/manage_event/manager/manage_event_provider.dart';
+import 'package:evently/modules/manage_event/widgets/custom_choose_event_date_time.dart';
+import 'package:evently/modules/manage_event/widgets/custom_text_form_field.dart';
+import 'package:evently/core/widgets/custom_action_button.dart';
 import 'package:evently/modules/main_layout/models/category_model.dart';
 import 'package:evently/modules/main_layout/widgets/custom_tabbar.dart';
 import 'package:evently/core/providers/theme_provider.dart';
@@ -14,8 +15,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-class AddEventScreen extends StatelessWidget {
-  const AddEventScreen({super.key});
+class ManageEventScreen extends StatelessWidget {
+  const ManageEventScreen({super.key, this.event});
+  final EventModel? event ;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,14 @@ class AddEventScreen extends StatelessWidget {
     bool isEn = context.locale.languageCode == "en";
     return Scaffold(
       appBar: AppBar(
-        leading: CustomBackButton(),
+        leading: CustomActionButton( 
+          onTap: () => Navigator.pop(context) ,
+          icon: Icon(
+            Icons.arrow_back_ios_new,
+            color: isLight ? AppColors.lightPrimaryColor : Colors.white,
+            size: 24.sp , 
+          ) ,
+        ) ,
         title: Text(
           "add_event".tr(),
           style: AppFonts.medium18.copyWith(
@@ -34,11 +43,11 @@ class AddEventScreen extends StatelessWidget {
       ),
       body: DefaultTabController(
         length: CategoryModel.categories.length,
-        child: Consumer<AddEventProvider>(
+        child: Consumer<ManageEventProvider>(
           builder:
           (
             BuildContext context,
-            AddEventProvider provider,
+            ManageEventProvider provider,
             Widget? child,
           ) => Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 18.h),
@@ -158,7 +167,13 @@ class AddEventScreen extends StatelessWidget {
                       child: CustomButton(
                         title: "add_event".tr(),
                         isLoading: provider.isLoading ,
-                        onTap: () => provider.addEvent(context)
+                        onTap: () async { 
+                          provider.addEvent(context) ;
+                          await Future.delayed( Duration(milliseconds: 500 ) ) ;
+                          if ( context.mounted ) {
+                            Navigator.pop( context , true ) ;  
+                          }
+                        }
                       ),
                     ),
                     SizedBox(height: 30.h),

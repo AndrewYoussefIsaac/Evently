@@ -1,5 +1,7 @@
-import 'package:evently/modules/add_event/manager/add_event_provider.dart';
-import 'package:evently/modules/add_event/screens/add_event_screen.dart';
+import 'package:evently/core/models/event_model.dart';
+import 'package:evently/modules/manage_event/manager/manage_event_provider.dart';
+import 'package:evently/modules/manage_event/screens/event_details_screen.dart';
+import 'package:evently/modules/manage_event/screens/manage_event_screen.dart';
 import 'package:evently/modules/auth/manager/auth_provider.dart';
 import 'package:evently/modules/auth/screens/forget_password_screen.dart';
 import 'package:evently/modules/auth/screens/login_screen.dart';
@@ -53,11 +55,21 @@ class AppRoute {
           ),
         );
 
-      case AppRouteNames.addEventScreen:
+      case AppRouteNames.manageEventScreen:
+        final EventModel? eventModel = settings.arguments as EventModel? ;
         return MaterialPageRoute(
           builder: (_) => ChangeNotifierProvider(
-            create: (BuildContext context) => AddEventProvider() ,
-            child: AddEventScreen(),
+            create: (BuildContext context) => ManageEventProvider() ,
+            child: ManageEventScreen( event: eventModel , ) ,
+          ),
+        );
+
+      case AppRouteNames.eventDetailsScreen:
+        final EventModel eventModel = settings.arguments as EventModel ;
+        return MaterialPageRoute(
+          builder: (_) => ChangeNotifierProvider(
+            create: (BuildContext context) => ManageEventProvider() ,
+            child: EventDetailsScreen( event: eventModel ,),
           ),
         );
 

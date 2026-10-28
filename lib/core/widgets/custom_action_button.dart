@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-class CustomBackButton extends StatelessWidget {
-  const CustomBackButton({super.key});
-
+class CustomActionButton extends StatelessWidget {
+  const CustomActionButton({super.key, required this.onTap, required this.icon});
+  final VoidCallback onTap ;
+  final Widget icon ;
   @override
   Widget build(BuildContext context) {
         ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
@@ -14,9 +15,7 @@ class CustomBackButton extends StatelessWidget {
     return Navigator.canPop(context) ? Padding(
           padding: const EdgeInsets.all(8),
           child: InkWell(
-            onTap: () {
-              Navigator.pop(context);
-            },
+            onTap: onTap ,
             borderRadius: BorderRadius.circular(8.r),
             child: FittedBox(
               fit: .scaleDown ,
@@ -30,11 +29,7 @@ class CustomBackButton extends StatelessWidget {
                     width: 1.5.w ,
                   ),
                 ),
-                child: Icon(
-                  Icons.arrow_back_ios_new,
-                  color: isLightMode ? AppColors.lightPrimaryColor : Colors.white,
-                  size: 24.sp , 
-                ),
+                child: icon
               ),
             ),
           ),

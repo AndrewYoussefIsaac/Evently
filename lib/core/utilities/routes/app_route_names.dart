@@ -5,5 +5,6 @@ abstract class AppRouteNames {
   static const String signupScreen  =  "SignupScreen" ;
   static const String forgetPasswordScreen  =  "ForgetPasswordScreen" ;
   static const String mainLayoutScreen  =  "MainLayoutScreen" ;
-  static const String addEventScreen  =  "AddEventScreen" ;
+  static const String manageEventScreen  =  "ManageEventScreen" ;
+  static const String eventDetailsScreen  =  "EventDetailsScreen" ;
 }

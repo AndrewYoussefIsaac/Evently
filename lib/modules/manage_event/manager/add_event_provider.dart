@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:evently/core/models/event_model.dart';
 import 'package:evently/core/utilities/app_colors.dart';
 import 'package:evently/core/utilities/toast.dart';
-import 'package:evently/modules/add_event/services/add_event_service.dart';
+import 'package:evently/modules/manage_event/services/manage_event_service.dart';
 import 'package:evently/modules/main_layout/models/category_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +41,7 @@ class AddEventProvider extends ChangeNotifier {
 
   Future<void> addEvent ( BuildContext context ) async {
 
-    AddEventService addEventService = AddEventService() ;
+    ManageEventService addEventService = ManageEventService() ;
 
     // final dateTime to deal with firestore 
     DateTime? dateTime = (eventDate != null && eventTime != null) 

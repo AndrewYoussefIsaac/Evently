@@ -1,6 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:evently/modules/auth/manager/auth_provider.dart';
-import 'package:evently/modules/auth/widgets/custom_back_button.dart';
+import 'package:evently/core/widgets/custom_action_button.dart';
 import 'package:evently/modules/auth/widgets/custom_input_field.dart';
 import 'package:evently/core/providers/theme_provider.dart';
 import 'package:evently/core/utilities/app_colors.dart';
@@ -35,7 +35,14 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
             color: isLightMode ? AppColors.lightTextColor : AppColors.textColor ,
           ) ,
         ) ,
-        leading: CustomBackButton() ,
+        leading: CustomActionButton( 
+          onTap: () => Navigator.pop(context) ,
+          icon: Icon(
+            Icons.arrow_back_ios_new,
+            color: isLightMode ? AppColors.lightPrimaryColor : Colors.white,
+            size: 24.sp , 
+          ) ,
+        ) ,
       ),
       body: Center(
         child: Padding(

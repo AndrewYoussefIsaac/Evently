@@ -38,6 +38,7 @@
     "dark_mode" : "Dark mode" ,
     "logout" : "Logout" , 
     "add_event" : "Add event" ,
+    "event_details" : "Event details" ,
     "title" : "Title" ,
     "event_title" : "Event Title" ,
     "description" : "Description " , 

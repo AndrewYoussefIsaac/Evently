@@ -1,4 +1,5 @@
 import 'package:evently/core/models/event_model.dart';
+import 'package:evently/core/utilities/routes/app_route_names.dart';
 import 'package:evently/modules/main_layout/services/layout_service.dart';
 import 'package:evently/modules/main_layout/widgets/custom_search_field.dart';
 import 'package:evently/modules/main_layout/widgets/event_card.dart';
@@ -55,7 +56,12 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                       child: ListView.separated(
                         itemCount: searchedEvents.length,
                         itemBuilder: (context, index) =>
-                            EventCard(event: searchedEvents[index]),
+                            EventCard(
+                              event: searchedEvents[index] , 
+                              onTap: () {
+                                Navigator.pushNamed( context , AppRouteNames.eventDetailsScreen , arguments: searchedEvents[index] ) ; 
+                              } ,
+                            ),
                         separatorBuilder: (context, index) =>
                             SizedBox(height: 16.h),
                       ),

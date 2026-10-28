@@ -11,67 +11,71 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 class EventCard extends StatelessWidget {
-  const EventCard({super.key, required this.event});
+  const EventCard({super.key, required this.event, required this.onTap});
   final EventModel event ;
+  final VoidCallback onTap ;
   
   @override
   Widget build(BuildContext context) {
     CategoryModel category = CategoryModel.categoryMap[ event.categoryId ] ! ;
     ThemeProvider themeProvider = Provider.of<ThemeProvider>( context , listen: true , );
     bool isLight = themeProvider.themeMode == ThemeMode.light;
-    return Container(
-      height: 193.h,
-      width: 343.w,
-      decoration: BoxDecoration(
-        borderRadius: .circular(16),
-        border: isLight
-            ? null
-            : BoxBorder.all(color: AppColors.darkStrokeColor, width: 1.8 ),
-        image: DecorationImage(
-          image: AssetImage(
-            isLight 
-            ? category.image 
-            : category.darkImage ,
+    return GestureDetector(
+      onTap: onTap ,
+      child: Container(
+        height: 193.h,
+        width: 343.w,
+        decoration: BoxDecoration(
+          borderRadius: .circular(16),
+          border: isLight
+              ? null
+              : BoxBorder.all(color: AppColors.darkStrokeColor, width: 1.8 ),
+          image: DecorationImage(
+            image: AssetImage(
+              isLight 
+              ? category.image 
+              : category.darkImage ,
+            ),
+            fit: .cover,
           ),
-          fit: .cover,
         ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: .spaceBetween ,
-          crossAxisAlignment: .start ,
-          children: [
-            Container(
-              padding: EdgeInsets.all(8.0),
-              width:  70.w ,
-              height: 40.h ,
-              decoration: BoxDecoration(
-                color: isLight
-                ? AppColors.lightStrokeColor
-                : AppColors.darkBgColor ,
-                borderRadius: BorderRadius.circular(8) ,
-                border: isLight
-                    ? null
-                    : BoxBorder.all(color: AppColors.darkStrokeColor, width: 1.8 ),
-              ),
-              child: Text( 
-                DateFormat("d MMM").format( event.dateTime) ,
-                style: AppFonts.semiBold16.copyWith(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: .spaceBetween ,
+            crossAxisAlignment: .start ,
+            children: [
+              Container(
+                padding: EdgeInsets.all(8.0),
+                width:  70.w ,
+                height: 40.h ,
+                decoration: BoxDecoration(
                   color: isLight
-                      ? AppColors.lightPrimaryColor 
-                      : AppColors.darkPrimaryColor , 
+                  ? AppColors.lightStrokeColor
+                  : AppColors.darkBgColor ,
+                  borderRadius: BorderRadius.circular(8) ,
+                  border: isLight
+                      ? null
+                      : BoxBorder.all(color: AppColors.darkStrokeColor, width: 1.8 ),
+                ),
+                child: Text( 
+                  DateFormat("d MMM").format( event.dateTime) ,
+                  style: AppFonts.semiBold16.copyWith(
+                    color: isLight
+                        ? AppColors.lightPrimaryColor 
+                        : AppColors.darkPrimaryColor , 
+                  ) ,
                 ) ,
               ) ,
-            ) ,
-            CustomBar(
-              title: event.title , 
-              body: FavoriteButton( favUsers: event.favUsers , eventId: event.eventId! ,) , 
-              color: isLight
-                ? AppColors.lightStrokeColor
-                : AppColors.darkBgColor ,
-            ) ,
-          ],
+              CustomBar(
+                title: event.title , 
+                body: FavoriteButton( favUsers: event.favUsers , eventId: event.eventId! ,) , 
+                color: isLight
+                  ? AppColors.lightStrokeColor
+                  : AppColors.darkBgColor ,
+              ) ,
+            ],
+          ),
         ),
       ),
     );
