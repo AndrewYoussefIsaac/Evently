@@ -139,7 +139,6 @@ class EventDetailsScreen extends StatelessWidget {
                   ),
                 ) ,
               ) ,
-
             ],
           ),
         ),
