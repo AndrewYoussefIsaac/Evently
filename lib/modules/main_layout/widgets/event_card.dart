@@ -46,8 +46,7 @@ class EventCard extends StatelessWidget {
             crossAxisAlignment: .start ,
             children: [
               Container(
-                padding: EdgeInsets.all(8.0),
-                width:  70.w ,
+                padding: EdgeInsets.all(10.0),
                 height: 40.h ,
                 decoration: BoxDecoration(
                   color: isLight

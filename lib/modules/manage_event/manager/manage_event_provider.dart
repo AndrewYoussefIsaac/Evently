@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:evently/core/models/event_model.dart';
 import 'package:evently/core/utilities/app_colors.dart';
+import 'package:evently/core/utilities/routes/app_route_names.dart';
 import 'package:evently/core/utilities/toast.dart';
 import 'package:evently/modules/manage_event/services/manage_event_service.dart';
 import 'package:evently/modules/main_layout/models/category_model.dart';
@@ -8,6 +9,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ManageEventProvider extends ChangeNotifier {
+
+  ManageEventProvider({ EventModel? event }){
+    if ( event != null ) {
+      titleController.text = event.title ;
+      descriptionController.text = event.description ;
+      eventDate = event.dateTime ;
+      eventTime = TimeOfDay.fromDateTime(event.dateTime) ;
+      selectedTab = CategoryModel.categories.indexWhere((e) => e.id == event.categoryId) ;
+      notifyListeners() ;
+    }
+  }
   // tabs 
   int selectedTab = 0 ; // initially 
   void updateSelectedTab ( int index ) {
@@ -82,6 +94,51 @@ class ManageEventProvider extends ChangeNotifier {
       ) ;
       if (context.mounted) {
         Toast.showToast( title: "event_success_create".tr() , color: AppColors.green , context: context) ;
+        await Future.delayed( Duration(milliseconds: 500 ) ) ;
+        if( context.mounted ){
+          Navigator.pop( context , true ) ;  
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        Toast.showToast( title: 'event_fail_create'.tr() , context: context) ;
+      }
+    }
+    isLoading = false ;
+    notifyListeners() ;
+  }
+
+  Future<void> updateEvent ( BuildContext context  , String? eventId , EventModel? event ) async {
+    ManageEventService manageEventService = ManageEventService() ;
+    isLoading = true ;
+    notifyListeners() ;
+    try {
+      if (formKey.currentState?.validate() == false ){
+        isLoading = false ;
+        notifyListeners() ;
+        return ;
+      } else if ( eventDate == null ) {
+        Toast.showToast( title: "date_hint".tr() , context: context) ;
+        isLoading = false ;
+        notifyListeners() ;
+        return ;
+      } else if ( eventTime == null ) {
+        Toast.showToast( title: "time_hint".tr() , context: context) ;
+        isLoading = false ;
+        notifyListeners() ;
+        return ;
+      }
+      await manageEventService.updateEvent( eventId! , event! ) ;
+      if (context.mounted) {
+        Toast.showToast( title: "event_success_update".tr() , color: AppColors.green , context: context) ;
+        await Future.delayed( Duration(milliseconds: 500 ) ) ;
+        if (context.mounted) {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            AppRouteNames.mainLayoutScreen,
+            (route) => false,
+          );
+        }
       }
     } catch (e) {
       if (context.mounted) {

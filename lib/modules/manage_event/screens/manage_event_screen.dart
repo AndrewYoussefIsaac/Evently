@@ -11,6 +11,7 @@ import 'package:evently/core/utilities/app_colors.dart';
 import 'package:evently/core/utilities/app_fonts.dart';
 import 'package:evently/core/utilities/app_images.dart';
 import 'package:evently/core/widgets/custom_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -35,155 +36,173 @@ class ManageEventScreen extends StatelessWidget {
           ) ,
         ) ,
         title: Text(
-          "add_event".tr(),
+          event == null 
+              ? "add_event".tr()
+              : "edit_event".tr(),
           style: AppFonts.medium18.copyWith(
             color: isLight ? AppColors.lightTextColor : AppColors.textColor,
           ),
         ),
       ),
-      body: DefaultTabController(
-        length: CategoryModel.categories.length,
-        child: Consumer<ManageEventProvider>(
-          builder:
-          (
-            BuildContext context,
-            ManageEventProvider provider,
-            Widget? child,
-          ) => Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 18.h),
-            child: SingleChildScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
-              child: Form(
-                key: provider.formKey ,
-                child: Column(
-                  crossAxisAlignment: isEn ? .start : .end,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: Image(
-                        image: AssetImage(
-                          isLight
-                              ? CategoryModel
-                                    .categories[provider.selectedTab]
-                                    .image
-                              : CategoryModel
-                                    .categories[provider.selectedTab]
-                                    .darkImage,
+      body: Consumer<ManageEventProvider>(
+        builder: (context, provider , child) => 
+        DefaultTabController(
+          length: CategoryModel.categories.length ,
+          initialIndex: provider.selectedTab , //////////////////////  initial tab index ( zero by default )
+          child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 18.h),
+              child: SingleChildScrollView(
+                physics: AlwaysScrollableScrollPhysics(),
+                child: Form(
+                  key: provider.formKey ,
+                  child: Column(
+                    crossAxisAlignment: isEn ? .start : .end,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: Image(
+                          image: AssetImage(
+                            isLight
+                                ? CategoryModel
+                                      .categories[provider.selectedTab]
+                                      .image
+                                : CategoryModel
+                                      .categories[provider.selectedTab]
+                                      .darkImage
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 16.h),
-                    CustomTabbar(
-                      showAll: false,
-                      selectedTab: provider.selectedTab,
-                      onTap: provider.updateSelectedTab,
-                    ),
-                    SizedBox(height: 16.h),
-                    Text(
-                      "title".tr(),
-                      style: AppFonts.medium16.copyWith(
-                        color: isLight
-                            ? AppColors.lightTextColor
-                            : AppColors.textColor,
+                      SizedBox(height: 16.h),
+                      CustomTabbar(
+                        showAll: false,
+                        selectedTab: provider.selectedTab,
+                        onTap: provider.updateSelectedTab,
                       ),
-                    ),
-                    SizedBox(height: 8.h),
-                    CustomTextFormField(
-                      label: "event_title".tr() ,
-                      controller: provider.titleController ,
-                      validator: (value) {
-                        if (value != null && value.trim() != "") {
-                          return null;
-                        } else {
-                          return "title_hint".tr() ;
-                        }
-                      },
-                    ),
-                    SizedBox(height: 16.h),
-                    Text(
-                      "description".tr(),
-                      style: AppFonts.medium16.copyWith(
-                        color: isLight
-                            ? AppColors.lightTextColor
-                            : AppColors.textColor,
+                      SizedBox(height: 16.h),
+                      Text(
+                        "title".tr(),
+                        style: AppFonts.medium16.copyWith(
+                          color: isLight
+                              ? AppColors.lightTextColor
+                              : AppColors.textColor,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 8.h),
-                    SizedBox(
-                      height: 168.h,
-                      child: CustomTextFormField(
-                        label: "event_description".tr(),
-                        controller:  provider.descriptionController ,
+                      SizedBox(height: 8.h),
+                      CustomTextFormField(
+                        label: "event_title".tr() ,
+                        controller: provider.titleController ,
                         validator: (value) {
                           if (value != null && value.trim() != "") {
                             return null;
                           } else {
-                            return "description_hint".tr() ;
+                            return "title_hint".tr() ;
                           }
                         },
-                        expands: true,
                       ),
-                    ),
-                    SizedBox(height: 16.h),
-                    CustomChooseEventDateTime(
-                      image: AppImages.calendar,
-                      title: "event_date",
-                      onTap: () async {
-                        DateTime? eventDate = await showDatePicker(
-                          context: context,
-                          firstDate: DateTime.now(),
-                          currentDate: provider.eventDate,
-                          lastDate: DateTime.now().add(Duration(days: 365)),
-                        );
-                        if (eventDate != null) {
-                          provider.updateEventDate(eventDate);
-                        }
-                      },
-                      underlinedTitle: provider.eventDate == null
-                          ? "choose_date"
-                          : DateFormat(
-                              'yyyy MMM dd',
-                            ).format(provider.eventDate!),
-                    ),
-                    SizedBox(height: 16.h),
-                    CustomChooseEventDateTime(
-                      image: AppImages.clock,
-                      title: "event_time",
-                      onTap: () async {
-                        TimeOfDay? eventTime = await showTimePicker(
-                          context: context,
-                          initialTime: TimeOfDay.now(),
-                        );
-                        if (eventTime != null) {
-                          provider.updateEventTime(eventTime);
-                        }
-                      },
-                      underlinedTitle: provider.eventTime == null
-                          ? "choose_time"
-                          : provider.eventTime!.format(context),
-                    ),
-                    SizedBox(height: 30.h),
-                    Center(
-                      child: CustomButton(
-                        title: "add_event".tr(),
-                        isLoading: provider.isLoading ,
-                        onTap: () async { 
-                          provider.addEvent(context) ;
-                          await Future.delayed( Duration(milliseconds: 500 ) ) ;
-                          if ( context.mounted ) {
-                            Navigator.pop( context , true ) ;  
+                      SizedBox(height: 16.h),
+                      Text(
+                        "description".tr(),
+                        style: AppFonts.medium16.copyWith(
+                          color: isLight
+                              ? AppColors.lightTextColor
+                              : AppColors.textColor,
+                        ),
+                      ),
+                      SizedBox(height: 8.h),
+                      SizedBox(
+                        height: 168.h,
+                        child: CustomTextFormField(
+                          label: "event_description".tr(),
+                          controller:  provider.descriptionController ,
+                          validator: (value) {
+                            if (value != null && value.trim() != "") {
+                              return null;
+                            } else {
+                              return "description_hint".tr() ;
+                            }
+                          },
+                          expands: true,
+                        ),
+                      ),
+                      SizedBox(height: 16.h),
+                      CustomChooseEventDateTime(
+                        image: AppImages.calendar,
+                        title: "event_date",
+                        onTap: () async {
+                          DateTime? eventDate = await showDatePicker(
+                            context: context,
+                            firstDate: DateTime.now(),
+                            currentDate: provider.eventDate,
+                            lastDate: DateTime.now().add(Duration(days: 365)),
+                          );
+                          if (eventDate != null) {
+                            provider.updateEventDate(eventDate);
                           }
-                        }
+                        },
+                        underlinedTitle: provider.eventDate == null
+                            ? "choose_date"
+                            : DateFormat(
+                                'yyyy MMM dd',
+                              ).format(provider.eventDate!),
                       ),
-                    ),
-                    SizedBox(height: 30.h),
-                  ],
+                      SizedBox(height: 16.h),
+                      CustomChooseEventDateTime(
+                        image: AppImages.clock,
+                        title: "event_time",
+                        onTap: () async {
+                          TimeOfDay? eventTime = await showTimePicker(
+                            context: context,
+                            initialTime: TimeOfDay.now(),
+                          );
+                          if (eventTime != null) {
+                            provider.updateEventTime(eventTime);
+                          }
+                        },
+                        underlinedTitle: provider.eventTime == null
+                            ? "choose_time"
+                            : provider.eventTime!.format(context),
+                      ),
+                      SizedBox(height: 30.h),
+                      Center(
+                        child: CustomButton(
+                          title: event == null 
+                              ? "add_event".tr()
+                              : "edit_event".tr() ,
+                          isLoading: provider.isLoading ,
+                          onTap: () async { 
+                            if ( event == null ){
+                              await provider.addEvent(context) ;
+                            } else {
+                              EventModel updatedEvent = EventModel(
+                                eventId: event?.eventId ,
+                                favUsers: event!.favUsers ,
+                                ownerId: FirebaseAuth.instance.currentUser!.uid , 
+                                categoryId: CategoryModel.categories[provider.selectedTab].id , 
+                                title: provider.titleController.text , 
+                                description: provider.descriptionController.text , 
+                                dateTime: DateTime(
+                                  provider.eventDate!.year ,
+                                  provider.eventDate!.month ,
+                                  provider.eventDate!.day ,
+                                  provider.eventTime!.hour ,
+                                  provider.eventTime!.minute ,
+                                )
+                              ) ;
+                              if ( event?.categoryId != updatedEvent.categoryId || event?.dateTime != updatedEvent.dateTime || event?.description != updatedEvent.description || event?.title != updatedEvent.title ) {
+                                await provider.updateEvent(context, event?.eventId , updatedEvent );/// we send the new data model
+                              }
+                            }
+                          }
+                        ),
+                      ),
+                      SizedBox(height: 30.h),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
       ),
-    );
+    ) ;
   }
 }

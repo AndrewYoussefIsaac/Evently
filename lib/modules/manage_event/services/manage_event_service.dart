@@ -16,4 +16,11 @@ class ManageEventService {
     .delete();
   }
 
+  Future<void> updateEvent( String eventId , EventModel event ) async {
+    await FirebaseFirestore.instance
+    .collection('events')
+    .doc(eventId)
+    .set(event.toJson());
+  }
+
 }

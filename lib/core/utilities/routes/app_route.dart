@@ -59,7 +59,7 @@ class AppRoute {
         final EventModel? eventModel = settings.arguments as EventModel? ;
         return MaterialPageRoute(
           builder: (_) => ChangeNotifierProvider(
-            create: (BuildContext context) => ManageEventProvider() ,
+            create: (BuildContext context) => ManageEventProvider( event: eventModel ) ,
             child: ManageEventScreen( event: eventModel , ) ,
           ),
         );
