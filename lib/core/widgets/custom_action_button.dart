@@ -12,7 +12,7 @@ class CustomActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
         ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
         bool isLightMode = themeProvider.themeMode == .light ;
-    return Navigator.canPop(context) ? Padding(
+    return Padding(
           padding: const EdgeInsets.all(8),
           child: InkWell(
             onTap: onTap ,
@@ -33,6 +33,6 @@ class CustomActionButton extends StatelessWidget {
               ),
             ),
           ),
-        ) : SizedBox.shrink() ;
+        ) ;
   }
 }

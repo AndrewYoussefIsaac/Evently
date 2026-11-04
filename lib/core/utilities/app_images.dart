@@ -42,4 +42,8 @@ abstract class AppImages {
   static const String clock = "assets/images/clock.svg" ;
   static const String search = "assets/images/search_icon.svg" ;
 
+  static const String onboarding1 = "assets/images/first_on_boarding.png" ;
+  static const String onboarding2 = "assets/images/second_on_boarding.png" ;
+  static const String onboarding3 = "assets/images/third_on_boarding.png" ;
+
 }
