@@ -1,8 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:evently/core/providers/theme_provider.dart';
+import 'package:evently/core/services/shared_preference_service.dart';
 import 'package:evently/core/utilities/app_colors.dart';
 import 'package:evently/core/utilities/app_fonts.dart';
 import 'package:evently/core/utilities/app_images.dart';
+import 'package:evently/core/utilities/app_keys.dart';
 import 'package:evently/core/utilities/routes/app_route_names.dart';
 import 'package:evently/core/widgets/custom_button.dart';
 import 'package:evently/core/widgets/selection_item.dart';
@@ -120,7 +122,12 @@ class StartScreen extends StatelessWidget {
                 SizedBox( height: 24 ,) ,
                 CustomButton( title: "let’s start".tr() , isLoading: false , 
                   onTap: () {
-                    Navigator.pushReplacementNamed( context , AppRouteNames.loginScreen ) ;
+                    if ( SharedPrefsService.getData( key: AppKeys.onBoardingKey ) == null ){ // first visit 
+                      Navigator.pushReplacementNamed( context , AppRouteNames.onBoardingScreen ) ;
+                    }
+                    else {
+                      Navigator.pushReplacementNamed( context , AppRouteNames.loginScreen ) ;
+                    }
                   } ,
                 ) ,
               ],

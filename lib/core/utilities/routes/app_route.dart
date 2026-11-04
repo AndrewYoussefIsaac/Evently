@@ -8,6 +8,7 @@ import 'package:evently/modules/auth/screens/login_screen.dart';
 import 'package:evently/modules/auth/screens/signup_screen.dart';
 import 'package:evently/modules/main_layout/manager/layout_provider.dart';
 import 'package:evently/modules/main_layout/screens/main_layout_screen.dart';
+import 'package:evently/modules/on_boarding/screens/on_boarding_screen.dart';
 import 'package:evently/modules/splash/screens/splash_screen.dart';
 import 'package:evently/modules/start/screens/start_screen.dart';
 import 'package:evently/core/utilities/routes/app_route_names.dart';
@@ -22,6 +23,9 @@ class AppRoute {
 
       case AppRouteNames.startScreen:
         return MaterialPageRoute(builder: (_) => StartScreen());
+
+      case AppRouteNames.onBoardingScreen :
+        return MaterialPageRoute(builder: (_) => OnBoardingScreen());
 
       case AppRouteNames.loginScreen:
         return MaterialPageRoute(

@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:evently/core/providers/theme_provider.dart';
+import 'package:evently/core/services/shared_preference_service.dart';
 import 'package:evently/core/utilities/routes/app_route.dart';
 import 'package:evently/core/utilities/routes/app_route_names.dart';
 import 'package:evently/core/utilities/app_themes.dart';
@@ -10,6 +11,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart'; 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized(); 
+  await SharedPrefsService.init();
   await EasyLocalization.ensureInitialized(); 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
