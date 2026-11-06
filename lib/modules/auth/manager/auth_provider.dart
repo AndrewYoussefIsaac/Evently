@@ -94,6 +94,39 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners() ;
   }
 
+  Future<void> signInWithGoogle ({ required BuildContext context , }) async {
+    try {
+      await _firebaseService.signInWithGoogle() ;
+      if ( context.mounted ) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar( 
+            content: Row(
+              textDirection: context.locale.languageCode =="ar" ?  .rtl : .ltr ,
+              children: [
+                Text("welcome".tr()),
+              ],
+            ) ,
+            behavior: .floating ,
+            backgroundColor: AppColors.green ,
+            shape: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16) ,
+              borderSide: BorderSide( color: AppColors.green , )
+            ),
+          )
+        );
+      }
+        Future.delayed( Duration( microseconds: 250 ) , (){
+        if ( context.mounted ) {
+          Navigator.pushReplacementNamed(context, AppRouteNames.mainLayoutScreen) ;          
+        }
+      }) ;
+    } catch (e) {
+      if ( context.mounted ) {
+        Toast.showToast(title: e.toString() , context: context ) ;
+      }
+    }
+  }
+
   Future<void> forgetPassword({
     required BuildContext context ,
     required String email ,

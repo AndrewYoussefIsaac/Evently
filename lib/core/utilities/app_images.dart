@@ -12,6 +12,7 @@ abstract class AppImages {
   static const String userProfile = "assets/images/profile.png" ;
   static const String editEvent = "assets/images/edit.svg" ;
   static const String deleteEvent = "assets/images/trash.svg" ;
+  static const String google = "assets/images/google.svg" ;
 
   static const String all = "assets/images/all.svg" ;
   static const String birthday = "assets/images/birthday.svg" ;

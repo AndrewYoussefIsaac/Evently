@@ -65,6 +65,8 @@
     "search" : "Search for event" , 
     "next" : "Next" , 
     "get_started" : "Get started" , 
-    "skip" : "Skip"
-
+    "skip" : "Skip" ,
+    "or" : "Or" ,
+    "login_with_google" : "Login with Google" ,
+    "signup_with_google" : "Sign up with Google" 
 }
