@@ -1,6 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class FirebaseService {
+
   Future<UserCredential> createAccount({
     required String name,
     required String email,
@@ -56,6 +59,17 @@ class FirebaseService {
     } catch (e) {
       rethrow;
     }
+  }
+  
+
+  static final GoogleSignIn _googleSignIn = GoogleSignIn.instance ;
+
+  Future<UserCredential> signInWithGoogle() async {
+    await _googleSignIn.initialize( serverClientId: dotenv.env["SERVER_CLIENT_ID"] ) ;
+    final GoogleSignInAccount result = await _googleSignIn.authenticate() ;
+    final googleAuth = result.authentication ;
+    final credentials = GoogleAuthProvider.credential( idToken: googleAuth.idToken , ) ;
+    return await FirebaseAuth.instance.signInWithCredential(credentials) ;
   }
   
 }

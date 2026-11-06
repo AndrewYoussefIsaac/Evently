@@ -64,6 +64,9 @@
     "description_hint" : "يرجى إدخال الوصف",
     "search" : "ابحث عن حدث",
     "next" : "التالي",
-    "get_started" : "ابدأ الآن" ,
-    "skip" : "تخطي"
+    "get_started" : "ابدأ الآن",
+    "skip" : "تخطي",
+    "or" : "أو",
+    "login_with_google" : "تسجيل الدخول بواسطة جوجل",
+    "signup_with_google" : "إنشاء حساب بواسطة جوجل"
 }

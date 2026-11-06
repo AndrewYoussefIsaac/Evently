@@ -5,18 +5,19 @@ import 'package:evently/core/utilities/routes/app_route.dart';
 import 'package:evently/core/utilities/routes/app_route_names.dart';
 import 'package:evently/core/utilities/app_themes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart'; 
 Future<void> main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
   WidgetsFlutterBinding.ensureInitialized(); 
   await SharedPrefsService.init();
   await EasyLocalization.ensureInitialized(); 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp( options: DefaultFirebaseOptions.currentPlatform, );
+  await dotenv.load(fileName: ".env");
 
   runApp(
     MultiProvider(
